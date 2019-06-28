@@ -10,7 +10,7 @@ Run the script and follow the assistant:
 
 The recommended settings are for Iranian users. Please use them to avoid being blocked!
 
-Once it ends, you can use the same file for all of your users in the same time.
+Once it ends, you can use the same file for all of your users at the same time.
 
 ### Firewall Config
 If you're using CSF, you should add some files to your CSF Configs. So first:
