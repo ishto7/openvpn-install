@@ -8,11 +8,39 @@ Run the script and follow the assistant:
 
 `wget https://git.io/vpn -O openvpn-install.sh && bash openvpn-install.sh`
 
-Once it ends, you can run it again to add more users, remove some of them or even completely uninstall OpenVPN.
+The recommended settings are for Iranian users. Please use them to avoid being blocked!
 
-### I want to run my own VPN but don't have a server for that
-You can get a VPS from just $1/month at [VirMach](https://billing.virmach.com/aff.php?aff=4109&url=billing.virmach.com/cart.php?gid=18).
+Once it ends, you can use the same file for all of your users in the same time.
 
-### Donations
+### Firewall Config
+If you're using CSF, you should add some files to your CSF Configs. So first:
 
-If you want to show your appreciation, you can donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VBAYDL34Z7J6L) or [cryptocurrency](https://pastebin.com/raw/M2JJpQpC). Thanks!
+`nano /etc/csf/csfpre.sh`
+
+Then add these lines to it:
+```#!/bin/bash
+iptables -I OUTPUT --match tcp --protocol tcp --dport 137 --jump DROP
+iptables -I FORWARD --match tcp --protocol tcp --dport 137 --jump DROP
+iptables -I FORWARD --match udp --protocol udp --dport 137 --jump DROP
+iptables -I FORWARD -d 192.168.0.0/16 -j DROP
+iptables -I FORWARD -d 172.16.0.0/12 -j DROP
+iptables -I FORWARD -d 100.64.0.0/10 -j DROP
+iptables -I FORWARD -d 127.0.0.0/8 -j DROP
+iptables -I FORWARD -d 169.254.0.0/16 -j DROP
+iptables -I FORWARD -d 192.0.0.0/24 -j DROP
+iptables -I FORWARD -d 192.0.2.0/24 -j DROP
+iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -s 10.8.0.0/24 -j ACCEPT
+iptables -A FORWARD -j REJECT
+iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -j SNAT --to-source 188.188.188.188
+```
+
+The `188.188.188.188` is your public IP. Change it in your file.
+
+### Run Service On Reboot
+To make sure the service always runs on reboot:
+`systemctl enable openvpn@server`
+
+It's no harm to restart the service when you're done installing:
+`systemctl restart openvpn@server`
