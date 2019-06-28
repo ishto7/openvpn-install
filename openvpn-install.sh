@@ -195,8 +195,8 @@ else
 		;;
 	esac
 	echo
-	echo "What port do you want OpenVPN listening to?"
-	read -p "Port: " -e -i 1194 PORT
+	echo "What port do you want OpenVPN listening to? (443 recommended for Iran)"
+	read -p "Port: " -e -i 443 PORT
 	echo
 	echo "Which DNS do you want to use with the VPN?"
 	echo "   1) Current system resolvers"
@@ -204,7 +204,7 @@ else
 	echo "   3) Google"
 	echo "   4) OpenDNS"
 	echo "   5) Verisign"
-	read -p "DNS [1-5]: " -e -i 1 DNS
+	read -p "DNS [1-5]: " -e -i 2 DNS
 	echo
 	echo "Finally, tell me your name for the client certificate."
 	echo "Please, use one word only, no special characters."
@@ -262,6 +262,7 @@ key server.key
 dh dh.pem
 auth SHA512
 tls-auth ta.key 0
+duplicate-cn
 topology subnet
 server 10.8.0.0 255.255.255.0
 ifconfig-pool-persist ipp.txt" > /etc/openvpn/server/server.conf
@@ -382,6 +383,8 @@ verb 3" > /etc/openvpn/server/client-common.txt
 	echo
 	echo "Finished!"
 	echo
-	echo "Your client configuration is available at:" ~/"$CLIENT.ovpn"
+	echo "Your client configuration is available at:" ~/"$CLIENT.ovpn" & " http://example.com/"$CLIENT.ovpn"
 	echo "If you want to add more clients, you simply need to run this script again!"
+	cp ~/$CLIENT.ovpn /home/admin/public_html/
+	echo "If you're using firewall, make sure you allow the server to communicate on the given port (443?) and protocol (UDP?)"
 fi
