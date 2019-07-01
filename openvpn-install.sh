@@ -383,7 +383,7 @@ verb 3" > /etc/openvpn/server/client-common.txt
 	echo
 	echo "Finished!"
 	echo
-	echo "Your client configuration is available at:" ~/"$CLIENT.ovpn" & " http://example.com/"$CLIENT.ovpn"
+	echo "Your client configuration is available at:" ~/"$CLIENT.ovpn" & http://example.com/"$CLIENT.ovpn"
 	echo "If you want to add more clients, you simply need to run this script again!"
 	cp ~/$CLIENT.ovpn /home/admin/public_html/
 	echo "If you're using firewall, make sure you allow the server to communicate on the given port (443?) and protocol (UDP?)"
